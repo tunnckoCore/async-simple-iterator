@@ -1,0 +1,80 @@
+{
+  "name": "async-simple-iterator",
+  "version": "0.0.0",
+  "description": "Making simple iterator for [async][] lib that adds support for settling (continue iteration after first error) and beforeEach/afterEach/error hooks. It also emits `beforeEach`, `afterEach` and `error` events.",
+  "repository": "tunnckoCore/async-simple-iterator",
+  "author": "Charlike Mike Reagent <@tunnckoCore> (http://www.tunnckocore.tk)",
+  "precommit.silent": true,
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "standard && node test.js"
+  },
+  "dependencies": {
+    "component-emitter": "^1.2.0",
+    "extend-shallow": "^2.0.1",
+    "is-typeof-error": "^1.1.0",
+    "lazy-cache": "^1.0.3",
+    "sliced": "^1.0.1"
+  },
+  "devDependencies": {
+    "assertit": "^0.1.0",
+    "async": "^2.0.0-rc.1",
+    "pre-commit": "*"
+  },
+  "files": [
+    "index.js",
+    "utils.js"
+  ],
+  "keywords": [
+    "after",
+    "after-each",
+    "async",
+    "async-simple-iterator",
+    "base",
+    "basic",
+    "before",
+    "before-each",
+    "control",
+    "control-flow",
+    "each",
+    "emit",
+    "emits",
+    "emitter",
+    "flow",
+    "fn",
+    "function",
+    "hooks",
+    "iterator",
+    "lib",
+    "settle",
+    "settling",
+    "simple",
+    "system",
+    "util",
+    "utils"
+  ],
+  "verb": {
+    "run": true,
+    "toc": false,
+    "layout": "empty",
+    "tasks": [
+      "readme"
+    ],
+    "related": {
+      "list": [
+        "async",
+        "async-control",
+        "async-base-iterator",
+        "relike"
+      ]
+    },
+    "reflinks": [
+      "async",
+      "is-typeof-error"
+    ],
+    "lint": {
+      "reflinks": true
+    }
+  }
+}
