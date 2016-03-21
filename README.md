@@ -16,7 +16,7 @@ npm i async-simple-iterator --save
 const asyncSimpleIterator = require('async-simple-iterator')
 ```
 
-### [AsyncSimpleIterator](index.js#L37)
+### [AsyncSimpleIterator](index.js#L51)
 > Initialize `AsyncSimpleIterator` with `options`.
 
 **Params**
@@ -28,27 +28,40 @@ const asyncSimpleIterator = require('async-simple-iterator')
 ```js
 var ctrl = require('async')
 var AsyncSimpleIterator = require('async-simple-iterator').AsyncSimpleIterator
-var base = new AsyncSimpleIterator({ settle: true })
 
-base.on('beforeEach', function (val) {
-  console.log('before each:', val)
-})
-base.on('afterEach', function (err, res, val) {
-  console.log('after each:', err, res, val)
-})
-base.on('error', function (err, res, val) {
-  console.log('on error:', err, res, val)
+var fs = require('fs')
+var base = new AsyncSimpleIterator({ settle: true })
+var iterator = base.wrapIterator(fs.stat)
+
+base
+  .on('beforeEach', function (val) {
+    console.log('before each:', val)
+  })
+  .on('afterEach', function (err, res, val) {
+    console.log('after each:', err, res, val)
+  })
+  .on('error', function (err, res, val) {
+    console.log('on error:', err, res, val)
+  })
+
+ctrl.map([
+  'path/to/existing/file.js',
+  'filepath/not/exist',
+  'path/to/file'
+], iterator, function (err, results) {
+  // => `err` will always be null, if `settle:true`
+  // => `results` is now an array of stats for each file
 })
 ```
 
-### [.wrapIterator](index.js#L79)
-> Wraps `iterator` function which then can be passed to [async][] lib.
+### [.wrapIterator](index.js#L129)
+> Wraps `iterator` function which then can be passed to [async][] lib. You can pass returned iterator function to **every** [async][] method that you want.
 
 **Params**
 
 * `iterator` **{Function}**: Iterator to pass to [async][] lib.    
 * `options` **{Object=}**: Pass `beforeEach`, `afterEach` and `error` hooks or `settle` option.    
-* `returns` **{Function}**: Wrapped `iterator` function which is passed to [async][].  
+* `returns` **{Function}**: Wrapped `iterator` function which can be passed to every [async][] method.  
 
 **Events**
 * `emits`: `beforeEach` with signature `val[, value], next`  
@@ -60,13 +73,47 @@ base.on('error', function (err, res, val) {
 ```js
 var ctrl = require('async')
 var base = require('async-simple-iterator')
+
+base
+  .on('beforeEach', function (value, key, next) {
+    console.log('before each:', value, key)
+  })
+  .on('afterEach', function (err, res, value, key, next) {
+    console.log('after each:', err, res, value, key)
+  })
+  .on('error', function (err, res, value, key, next) {
+    console.log('on error:', err, res, value, key)
+  })
+
+var iterator = base.wrapIterator(function (value, key, next) {
+  console.log('actual:', value, key)
+
+  if (key === 'dev') {
+     var err = new Error('err:' + key)
+     err.value = value
+     next(err)
+     return
+   }
+   next(null, 123 + key + 456)
+
+}, { settle: true })
+
+ctrl.forEachOf({
+  dev: './dev.json',
+  test: './test.json',
+  prod: './prod.json'
+}, iterator, function done (err) {
+  // if settle:false, `err`
+  // if settle:true, `null`
+  console.log('end:', err)
+})
 ```
 
 ## Related
 * [async](https://www.npmjs.com/package/async): Higher-order functions and common patterns for asynchronous code | [homepage](https://github.com/caolan/async)
-* [async-base-iterator](https://www.npmjs.com/package/async-base-iterator): Basic iterator for [async][] library that handles asynchronous and synchronous functions, also… [more](https://www.npmjs.com/package/async-base-iterator) | [homepage](https://github.com/tunnckocore/async-base-iterator)
-* [async-control](https://www.npmjs.com/package/async-control): Ultimate asynchronous control flow goodness with built-in hook system and compose, series,… [more](https://www.npmjs.com/package/async-control) | [homepage](https://github.com/hybridables/async-control)
-* [relike](https://www.npmjs.com/package/relike): Simple promisify a callback-style function with sane defaults. Support promisify-ing sync functions. | [homepage](https://github.com/hybridables/relike)
+* [async-base-iterator](https://www.npmjs.com/package/async-base-iterator): Basic iterator for [async][] library that handles asynchronous and synchronous… [more](https://www.npmjs.com/package/async-base-iterator) | [homepage](https://github.com/tunnckocore/async-base-iterator)
+* [async-control](https://www.npmjs.com/package/async-control): Ultimate asynchronous control flow goodness with built-in hook system and… [more](https://www.npmjs.com/package/async-control) | [homepage](https://github.com/hybridables/async-control)
+* [relike](https://www.npmjs.com/package/relike): Simple promisify a callback-style function with sane defaults. Support promisify-ing… [more](https://www.npmjs.com/package/relike) | [homepage](https://github.com/hybridables/relike)
 
 ## Contributing
 Pull requests and stars are always welcome. For bugs and feature requests, [please create an issue](https://github.com/tunnckoCore/async-simple-iterator/issues/new).  
