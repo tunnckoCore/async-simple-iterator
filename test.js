@@ -118,12 +118,12 @@ test('should emit beforeEach/afterEach events', function (done) {
 
 test('should be able to pass hooks through `options`', function (done) {
   var app = new Ctor({
-    beforeEach: beforeEach,
-    afterEach: afterEach
+    beforeEach: beforeEach
   })
   var itarator = app.wrapIterator(function (val, next) {
     next(null, val)
-  })
+  }, {afterEach: afterEach})
+
   ctrl.mapSeries(['a', 'b', 'c'], itarator, function (err) {
     test.ifError(err)
     test.deepEqual(values, ['a', 'b', 'c'])
