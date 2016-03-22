@@ -20,20 +20,20 @@ var AppBase = require('app-base').AppBase
  * var AsyncSimpleIterator = require('async-simple-iterator').AsyncSimpleIterator
  *
  * var fs = require('fs')
- * var base = new AsyncSimpleIterator({ settle: true })
- * var iterator = base.wrapIterator(fs.stat)
- *
- * base
- *   .on('beforeEach', function (val) {
+ * var base = new AsyncSimpleIterator({
+ *   settle: true,
+ *   beforeEach: function (val) {
  *     console.log('before each:', val)
- *   })
- *   .on('afterEach', function (err, res, val) {
- *     console.log('after each:', err, res, val)
- *   })
- *   .on('error', function (err, res, val) {
- *     console.log('on error:', err, res, val)
- *   })
- *
+ *   },
+ *   error: function (err, res, val) {
+ *     console.log('on error:', val)
+ *   }
+ * })
+ * var iterator = base.wrapIterator(fs.stat, {
+ *   afterEach: function (err, res, val) {
+ *     console.log('after each:', val)
+ *   }
+ * })
  *
  * ctrl.map([
  *   'path/to/existing/file.js',
@@ -86,9 +86,6 @@ AppBase.define(AsyncSimpleIterator.prototype, 'defaultOptions', function default
  * var base = require('async-simple-iterator')
  *
  * base
- *   .on('beforeEach', function (value, key, next) {
- *     console.log('before each:', value, key)
- *   })
  *   .on('afterEach', function (err, res, value, key, next) {
  *     console.log('after each:', err, res, value, key)
  *   })
@@ -107,7 +104,12 @@ AppBase.define(AsyncSimpleIterator.prototype, 'defaultOptions', function default
  *    }
  *    next(null, 123 + key + 456)
  *
- * }, { settle: true })
+ * }, {
+ *   settle: true,
+ *   beforeEach: function (value, key, next) {
+ *     console.log('before each:', value, key)
+ *   }
+ * })
  *
  * ctrl.forEachOf({
  *   dev: './dev.json',
