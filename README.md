@@ -16,7 +16,7 @@ npm i async-simple-iterator --save
 const asyncSimpleIterator = require('async-simple-iterator')
 ```
 
-### [AsyncSimpleIterator](index.js#L51)
+### [AsyncSimpleIterator](index.js#L52)
 > Initialize `AsyncSimpleIterator` with `options`.
 
 **Params**
@@ -54,7 +54,7 @@ ctrl.map([
 })
 ```
 
-### [.wrapIterator](index.js#L129)
+### [.wrapIterator](index.js#L134)
 > Wraps `iterator` function which then can be passed to [async][] lib. You can pass returned iterator function to **every** [async][] method that you want.
 
 **Params**

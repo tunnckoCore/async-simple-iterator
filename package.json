@@ -11,6 +11,7 @@
     "test": "standard && node test.js"
   },
   "dependencies": {
+    "app-base": "github:tunnckocore/app-base",
     "component-emitter": "^1.2.0",
     "extend-shallow": "^2.0.1",
     "is-typeof-error": "^1.1.0",

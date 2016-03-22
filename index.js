@@ -8,6 +8,7 @@
 'use strict'
 
 var utils = require('./utils')
+var AppBase = require('app-base').AppBase
 
 /**
  * > Initialize `AsyncSimpleIterator` with `options`.
@@ -54,7 +55,10 @@ function AsyncSimpleIterator (options) {
   }
   this.defaultOptions(options)
   utils.Emitter(this)
+  AppBase.call(this)
 }
+
+AppBase.extend(AsyncSimpleIterator)
 
 /**
  * > Setting default options. Default `settle` option is `false`.
@@ -64,12 +68,12 @@ function AsyncSimpleIterator (options) {
  * @api private
  */
 
-AsyncSimpleIterator.prototype.defaultOptions = function defaultOptions (options) {
+AppBase.define(AsyncSimpleIterator.prototype, 'defaultOptions', function defaultOptions (options) {
   options = utils.extend({settle: false}, this.options, options)
   options.settle = typeof options.settle === 'boolean' ? !!options.settle : false
   this.options = options
   return this
-}
+})
 
 /**
  * > Wraps `iterator` function which then can be passed to [async][] lib.
@@ -120,13 +124,14 @@ AsyncSimpleIterator.prototype.defaultOptions = function defaultOptions (options)
  * @emit  `afterEach` with signature `err, res, val[, value], next`
  * @emit  `error` with signature `err, res, val[, value], next`
  *
+ * @name   .wrapIterator
  * @param  {Function} `iterator` Iterator to pass to [async][] lib.
  * @param  {Object=} `options` Pass `beforeEach`, `afterEach` and `error` hooks or `settle` option.
  * @return {Function} Wrapped `iterator` function which can be passed to every [async][] method.
  * @api public
  */
 
-AsyncSimpleIterator.prototype.wrapIterator = function wrapIterator (iterator, options) {
+AppBase.define(AsyncSimpleIterator.prototype, 'wrapIterator', function wrapIterator (iterator, options) {
   if (typeof iterator !== 'function') {
     throw new TypeError('async-simple-iterator: expect `iterator` to be function')
   }
@@ -143,7 +148,7 @@ AsyncSimpleIterator.prototype.wrapIterator = function wrapIterator (iterator, op
   }
 
   return utils.iteratorFactory(this, iterator)
-}
+})
 
 /**
  * Expose `AsyncSimpleIterator` instance
