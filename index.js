@@ -139,14 +139,15 @@ AppBase.define(AsyncSimpleIterator.prototype, 'wrapIterator', function wrapItera
   }
   this.options = options ? utils.extend(this.options, options) : this.options
 
-  if (typeof this.options.beforeEach === 'function') {
-    this.on('beforeEach', this.options.beforeEach)
-  }
-  if (typeof this.options.afterEach === 'function') {
-    this.on('afterEach', this.options.afterEach)
-  }
-  if (typeof this.options.error === 'function') {
-    this.on('error', this.options.error)
+  var hooks = ['beforeEach', 'afterEach', 'error']
+  var len = hooks.length
+  var i = 0
+
+  while (i < len) {
+    var name = hooks[i++]
+    if (typeof this.options[name] === 'function') {
+      this.on(name, this.options[name])
+    }
   }
 
   return utils.iteratorFactory(this, iterator)
