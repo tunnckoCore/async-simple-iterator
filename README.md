@@ -1,6 +1,6 @@
 # [async-simple-iterator][author-www-url] [![npmjs.com][npmjs-img]][npmjs-url] [![The MIT License][license-img]][license-url] 
 
-> Making simple iterator for [async][] lib that adds support for settling (continue iteration after first error) and beforeEach/afterEach/error hooks. It also emits `beforeEach`, `afterEach` and `error` events.
+> Making simple iterator for [async][] lib that adds beforeEach, afterEach, error hooks and support for settling. It also emits `beforeEach`, `afterEach` and `error` events.
 
 [![code climate][codeclimate-img]][codeclimate-url] [![standard code style][standard-img]][standard-url] [![travis build status][travis-img]][travis-url] [![coverage status][coveralls-img]][coveralls-url] [![dependency status][david-img]][david-url]
 
