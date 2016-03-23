@@ -18,6 +18,8 @@ var base = require('async-simple-iterator')
 var AsyncSimpleIterator = require('async-simple-iterator').AsyncSimpleIterator
 ```
 
+## API
+
 ### [AsyncSimpleIterator](index.js#L52)
 > Initialize `AsyncSimpleIterator` with `options`.
 
