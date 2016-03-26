@@ -1,6 +1,6 @@
 {
   "name": "async-simple-iterator",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Making simple iterator for [async][] lib that adds beforeEach, afterEach, error hooks and support for settling. It also emits `beforeEach`, `afterEach` and `error` events.",
   "repository": "tunnckoCore/async-simple-iterator",
   "author": "Charlike Mike Reagent <@tunnckoCore> (http://www.tunnckocore.tk)",
