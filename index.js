@@ -8,7 +8,7 @@
 'use strict'
 
 var utils = require('./utils')
-var AppBase = require('app-base').AppBase
+var AppBase = require('compose-emitter').ComposeEmitter
 
 /**
  * > Initialize `AsyncSimpleIterator` with `options`.
@@ -54,8 +54,11 @@ function AsyncSimpleIterator (options) {
     return new AsyncSimpleIterator(options)
   }
   this.defaultOptions(options)
-  utils.Emitter(this)
-  AppBase.call(this)
+  AppBase.call(this, this.options)
+  this.on = this.compose('on')
+  this.off = this.compose('off')
+  this.once = this.compose('once')
+  this.emit = this.compose('emit')
 }
 
 AppBase.extend(AsyncSimpleIterator)
@@ -69,7 +72,10 @@ AppBase.extend(AsyncSimpleIterator)
  */
 
 AppBase.define(AsyncSimpleIterator.prototype, 'defaultOptions', function defaultOptions (options) {
-  options = utils.extend({settle: false}, this.options, options)
+  options = utils.extend({
+    emitter: new utils.Emitter(),
+    settle: false
+  }, this.options, options)
   options.settle = typeof options.settle === 'boolean' ? !!options.settle : false
   this.options = options
   return this
@@ -137,7 +143,10 @@ AppBase.define(AsyncSimpleIterator.prototype, 'wrapIterator', function wrapItera
   if (typeof iterator !== 'function') {
     throw new TypeError('async-simple-iterator: expect `iterator` to be function')
   }
-  this.options = options ? utils.extend(this.options, options) : this.options
+  var opts = this.options
+  var ctx = options ? utils.extend({}, opts.context, options.context) : opts.context
+  this.options = options ? utils.extend({}, opts, options) : opts
+  this.options.context = ctx
 
   var hooks = ['beforeEach', 'afterEach', 'error']
   var len = hooks.length

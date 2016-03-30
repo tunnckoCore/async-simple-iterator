@@ -131,3 +131,27 @@ test('should be able to pass hooks through `options`', function (done) {
     done()
   })
 })
+
+test('should bind correct context (passed from constructor)', function (done) {
+  var app = new Ctor({
+    context: {a: 'b'},
+    beforeEach: function (val) {
+      test.deepEqual(this, {a: 'b', c: 'd'})
+    }
+  })
+  // @todo
+  // app.on('afterEach', function (val) {
+  //     test.deepEqual(this, {a: 'b', c: 'd'})
+  //     console.log('after')
+  //   })
+  var itarator = app.wrapIterator(function (val, next) {
+    next(null, val)
+  }, {context: {c: 'd'}})
+
+  ctrl.mapSeries(['a', 'b', 'c'], itarator, function (err) {
+    test.ifError(err)
+    test.deepEqual(values, ['a', 'b', 'c'])
+    test.deepEqual(results, values)
+    done()
+  })
+})

@@ -24,7 +24,7 @@ require = utils // eslint-disable-line no-undef, no-native-reassign
  * Lazily required module dependencies
  */
 
-require('component-emitter', 'Emitter')
+require('eventemitter3', 'Emitter')
 require('extend-shallow', 'extend')
 require('is-typeof-error', 'isError')
 require('sliced', 'slice')
