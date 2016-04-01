@@ -71,13 +71,20 @@ AppBase.extend(AsyncSimpleIterator)
  * @api private
  */
 
-AppBase.define(AsyncSimpleIterator.prototype, 'defaultOptions', function defaultOptions (options) {
-  options = utils.extend({
+AppBase.define(AsyncSimpleIterator.prototype, 'defaultOptions', function defaultOptions (opts) {
+  var options = this.options || null
+  var context = opts
+    ? utils.extend({}, options && options.context, opts.context)
+    : (options && options.context || null)
+
+  opts = opts ? utils.extend(options, opts) : opts
+  opts = utils.extend({
     emitter: new utils.Emitter(),
     settle: false
-  }, this.options, options)
-  options.settle = typeof options.settle === 'boolean' ? !!options.settle : false
-  this.options = options
+  }, options, opts)
+
+  opts.context = context
+  this.options = opts
   return this
 })
 
@@ -143,10 +150,7 @@ AppBase.define(AsyncSimpleIterator.prototype, 'wrapIterator', function wrapItera
   if (typeof iterator !== 'function') {
     throw new TypeError('async-simple-iterator: expect `iterator` to be function')
   }
-  var opts = this.options
-  var ctx = options ? utils.extend({}, opts.context, options.context) : opts.context
-  this.options = options ? utils.extend({}, opts, options) : opts
-  this.options.context = ctx
+  this.defaultOptions(options)
 
   var hooks = ['beforeEach', 'afterEach', 'error']
   var len = hooks.length

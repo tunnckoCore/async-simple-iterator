@@ -139,19 +139,24 @@ test('should bind correct context (passed from constructor)', function (done) {
       test.deepEqual(this, {a: 'b', c: 'd'})
     }
   })
-  // @todo
-  // app.on('afterEach', function (val) {
-  //     test.deepEqual(this, {a: 'b', c: 'd'})
-  //     console.log('after')
-  //   })
+
+  app.on('afterEach', function (val) {
+    test.deepEqual(this, {a: 'b'})
+  })
+
   var itarator = app.wrapIterator(function (val, next) {
     next(null, val)
-  }, {context: {c: 'd'}})
+  }, {
+    context: {c: 'd'}
+  })
 
-  ctrl.mapSeries(['a', 'b', 'c'], itarator, function (err) {
+  app.on('afterEach', function (val) {
+    test.deepEqual(this, {a: 'b', c: 'd'})
+  })
+
+  ctrl.mapSeries(['foo', 'bar', 'cax'], itarator, function (err, res) {
+    test.deepEqual(res, ['foo', 'bar', 'cax'])
     test.ifError(err)
-    test.deepEqual(values, ['a', 'b', 'c'])
-    test.deepEqual(results, values)
     done()
   })
 })
