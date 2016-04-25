@@ -8,7 +8,7 @@
 'use strict'
 
 var utils = require('./utils')
-var AppBase = require('compose-emitter').ComposeEmitter
+var AppBase = require('app-base').AppBase
 
 /**
  * > Initialize `AsyncSimpleIterator` with `options`.
@@ -54,11 +54,11 @@ function AsyncSimpleIterator (options) {
     return new AsyncSimpleIterator(options)
   }
   this.defaultOptions(options)
-  AppBase.call(this, this.options)
-  this.on = this.compose('on')
-  this.off = this.compose('off')
-  this.once = this.compose('once')
-  this.emit = this.compose('emit')
+  AppBase.call(this)
+  this.on = utils.emitter.compose.call(this, 'on', this.options)
+  this.off = utils.emitter.compose.call(this, 'off', this.options)
+  this.once = utils.emitter.compose.call(this, 'once', this.options)
+  this.emit = utils.emitter.compose.call(this, 'emit', this.options)
 }
 
 AppBase.extend(AsyncSimpleIterator)
@@ -79,7 +79,7 @@ AppBase.define(AsyncSimpleIterator.prototype, 'defaultOptions', function default
 
   opts = opts ? utils.extend(options, opts) : opts
   opts = utils.extend({
-    emitter: new utils.Emitter(),
+    emitter: new utils.EventEmitter(),
     settle: false
   }, options, opts)
 
