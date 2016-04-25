@@ -11,7 +11,7 @@
     "test": "standard && node test.js"
   },
   "dependencies": {
-    "compose-emitter": "^1.0.1",
+    "compose-emitter": "^1.1.0",
     "eventemitter3": "^1.2.0",
     "extend-shallow": "^2.0.1",
     "is-typeof-error": "^1.1.0",
