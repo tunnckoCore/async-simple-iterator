@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "assertit": "^0.1.0",
-    "async": "^2.0.0-rc.1",
+    "async": "^2.1.2",
     "is-emitter": "^1.0.0",
     "pre-commit": "*"
   },
